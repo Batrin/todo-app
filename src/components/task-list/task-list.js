@@ -4,15 +4,17 @@ import ReactDOM from 'react-dom';
 import './task-list.css';
 import Task from '../task';
 
-const TaskList = ( {todos} ) => {
+const TaskList = ( {todos, onDeleted} ) => {
 
     const todosElements = todos.map(item => {
         const {id, ...itemProps} = item;
-
+        
         return (
-            <li key = {id}>
-                <Task {...itemProps} />
-            </li>
+            <Task
+                key={id}
+                {...itemProps}
+                onDeleted={() => onDeleted(id)}
+            />
         );
     })
 
