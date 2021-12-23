@@ -5,22 +5,9 @@ import './task.css';
 
 export default class Task extends Component {
 
-    state = {
-        done: false
-    }
-
-    completeTask = () => {
-        this.setState(({done}) => {
-            return {
-                done: !done
-            }
-        })
-    }
-
     render() {
 
-        const {label, onDeleted} = this.props;
-        const {done} = this.state;
+        const {label, onDeleted, onToggleDone, done} = this.props;
 
         let classNames = 'todo-list-item';
 
@@ -34,7 +21,7 @@ export default class Task extends Component {
                     <input
                         className="toggle"
                         type="checkbox"
-                        onChange={() => this.completeTask()}
+                        onChange={onToggleDone}
                     />
                     <label>
                         <span className="description">{label}</span>

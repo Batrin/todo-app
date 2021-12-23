@@ -1,22 +1,30 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import './task-filter.css';
 
-const TaskFilter = () => {
-    return (
-        <ul className="filters">
-            <li>
-                <button className="selected">All</button>
-            </li>
-            <li>
-                <button>Active</button>
-            </li>
-            <li>
-                <button>Completed</button>
-            </li>
-        </ul>
-    );
-}
+import FilterButton from '../filter-button';
 
-export default TaskFilter;
+export default class TaskFilter extends Component {
+
+
+    render() {
+        const {buttonArray ,onSelect} = this.props;
+
+        const buttonObjArray = buttonArray.map(el => {
+            return(
+                <FilterButton
+                    key={el.id}
+                    buttonProps={el}
+                    onSelect={onSelect}
+                />
+            );
+        })
+
+        return (
+            <ul className="filters">
+                {buttonObjArray}
+            </ul>
+        );
+    }
+}
