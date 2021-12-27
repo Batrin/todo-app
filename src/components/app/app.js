@@ -123,10 +123,39 @@ export default class App extends Component {
         return buttonArr.find(el => el.selected).name;
     }
 
+    deleteCompleted = () => {
+        this.setState(({todoData}) => {
+            const notCompletedTodos = todoData.filter(el => !el.done);
+
+            return {
+                todoData: notCompletedTodos
+            }
+        })
+    }
+
+    onEditItem = (id, newText) => {
+        this.setState(({todoData}) => {
+            const newItemIndex = this.findTodoIndex(id, todoData);
+            const newItem = todoData[newItemIndex];
+
+            newItem.label = newText;
+
+            const newTodoData = [
+                ...todoData.slice(0, newItemIndex),
+                newItem,
+                ...todoData.slice(newItemIndex + 1)
+            ];
+
+            return {
+                todoData: newTodoData
+            }
+        })
+    }
+
     render() {
         const {todoData, buttonArray} = this.state;
         const doneCount = todoData
-            .filter(el => el.done).length;
+            .filter(el => !el.done).length;
 
         const activeFilterName = this.getActiveFilter(buttonArray);
 
@@ -151,12 +180,15 @@ export default class App extends Component {
                     <TaskList
                         todos = {todoActiveData}
                         onDeleted={this.deleteItem}
-                        onToggleDone={this.onToggleDone}/>
+                        onToggleDone={this.onToggleDone}
+                        onEditItem={this.onEditItem}
+                    />
                 </section>
                 <Footer
                     done={doneCount}
                     buttonArray={this.state.buttonArray}
                     onSelect={this.onSelectFilter}
+                    deleteCompleted={this.deleteCompleted}
                 />
             </div>
         );

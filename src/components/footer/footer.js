@@ -5,7 +5,7 @@ import './footer.css';
 
 import TaskFilter from '../task-filter';
 
-const Footer = ({done, onSelect, buttonArray}) => {
+const Footer = ({done, onSelect, buttonArray, deleteCompleted}) => {
 
     return (
         <div className="footer">
@@ -14,7 +14,11 @@ const Footer = ({done, onSelect, buttonArray}) => {
                 buttonArray={buttonArray}
                 onSelect={onSelect}
             />
-            <button className="clear-completed">Clear completed</button>
+            <button
+                className="clear-completed"
+                onClick={deleteCompleted}>
+                Clear completed
+            </button>
         </div>
     );
 }
