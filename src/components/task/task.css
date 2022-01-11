@@ -156,3 +156,8 @@ li .edit {
 li.editing:last-child {
     margin-bottom: -1px;
 }
+
+li label .created {
+    font-size: 13px;
+    color: gray;
+}
