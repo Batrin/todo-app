@@ -21,7 +21,8 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "format": "prettier --write src/**/*.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "browserslist": {
     "production": [
@@ -47,7 +48,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "husky": "4.0.0",
+    "husky": "^4.3.8",
+    "install": "^0.13.0",
     "lint-staged": "^12.1.7",
     "prettier": "^2.5.1"
   }
