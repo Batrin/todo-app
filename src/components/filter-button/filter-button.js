@@ -3,18 +3,18 @@ import React from 'react';
 import './filter-button.css';
 import PropTypes from 'prop-types';
 
-function FilterButton({ buttonProps, onSelect }) {
+function FilterButton({ buttonProps, onSelect, isSelect }) {
   let classNames = 'filter-button-item';
 
-  const { name, selected, id } = buttonProps;
+  const { name } = buttonProps;
 
-  if (selected) {
+  if (isSelect) {
     classNames += ' selected';
   }
 
   return (
     <li className={classNames}>
-      <button onClick={() => onSelect(id)} type="button">
+      <button onClick={() => onSelect(name)} type="button">
         {name}
       </button>
     </li>
@@ -24,15 +24,16 @@ function FilterButton({ buttonProps, onSelect }) {
 FilterButton.defaultProps = {
   buttonProps: {
     name: '',
-    selected: false,
     id: Math.random(),
   },
   onSelect: () => {},
+  isSelect: false,
 };
 
 FilterButton.propTypes = {
   buttonProps: PropTypes.instanceOf(Object),
   onSelect: PropTypes.func,
+  isSelect: PropTypes.bool,
 };
 
 export default FilterButton;

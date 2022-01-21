@@ -12,12 +12,14 @@ export default class App extends Component {
 
   state = {
     todoData: [],
-    buttonArray: [
-      { name: 'All', selected: true, id: 1 },
-      { name: 'Active', selected: false, id: 2 },
-      { name: 'Completed', selected: false, id: 3 },
-    ],
+    selectedFilter: 'All',
   };
+
+  buttonArray = [
+    { name: 'All', id: 1 },
+    { name: 'Active', id: 2 },
+    { name: 'Completed', id: 3 },
+  ];
 
   findTodoIndex = (id, array) => array.findIndex((el) => el.id === id);
 
@@ -69,22 +71,11 @@ export default class App extends Component {
     });
   };
 
-  onSelectFilter = (id) => {
-    this.setState(({ buttonArray }) => {
-      const currSelectedIndex = buttonArray.findIndex((el) => el.selected);
-      const modifiedArr = this.toggleItemProp(buttonArray, currSelectedIndex, 'selected');
-
-      const newSelectedIndex = buttonArray.findIndex((el) => el.id === id);
-
-      const finalArr = this.toggleItemProp(modifiedArr, newSelectedIndex, 'selected');
-
-      return {
-        buttonArray: finalArr,
-      };
+  onSelectFilter = (name) => {
+    this.setState({
+      selectedFilter: name,
     });
   };
-
-  getActiveFilter = (buttonArr) => buttonArr.find((el) => el.selected).name;
 
   deleteCompleted = () => {
     this.setState(({ todoData }) => {
@@ -121,14 +112,12 @@ export default class App extends Component {
   }
 
   render() {
-    const { todoData, buttonArray } = this.state;
+    const { todoData, selectedFilter } = this.state;
     const doneCount = todoData.filter((el) => !el.done).length;
 
-    const activeFilterName = this.getActiveFilter(buttonArray);
+    let todoActiveData = [];
 
-    let todoActiveData;
-
-    switch (activeFilterName) {
+    switch (selectedFilter) {
       case 'Active':
         todoActiveData = todoData.filter((el) => !el.done);
         break;
@@ -136,7 +125,7 @@ export default class App extends Component {
         todoActiveData = todoData.filter((el) => el.done);
         break;
       default:
-        todoActiveData = todoData;
+        todoActiveData = [...todoData];
     }
 
     return (
@@ -153,9 +142,10 @@ export default class App extends Component {
         </section>
         <Footer
           done={doneCount}
-          buttonArray={this.state.buttonArray}
+          buttonArray={this.buttonArray}
           onSelect={this.onSelectFilter}
           deleteCompleted={this.deleteCompleted}
+          selectedFilter={selectedFilter}
         />
       </div>
     );
