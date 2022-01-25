@@ -149,6 +149,10 @@ li .icon-edit:after {
     content: '✎';
 }
 
+li .icon::before {
+    display: none;
+}
+
 li .edit {
     display: none;
 }
@@ -160,4 +164,34 @@ li.editing:last-child {
 li label .created {
     font-size: 13px;
     color: gray;
+}
+
+.task-control-buttons {
+    display: flex;
+}
+
+.timer-control {
+    display: flex;
+    height: 18px;
+    width: 50px;
+}
+
+.timer-button {
+    font-size: 18px;
+    height: 18px;
+    margin-left: 10px;
+}
+
+.timer-button:disabled {
+    color: #b3b1b1;
+}
+
+.task-time {
+    font-size: 18px;
+    margin: 0 0 0 5px;
+}
+
+.view {
+    display: flex;
+    flex-direction: column;
 }
