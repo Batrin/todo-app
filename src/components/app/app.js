@@ -47,8 +47,8 @@ export default class App extends Component {
     });
   };
 
-  addItem = (text) => {
-    const newItem = this.createTodoItem(text);
+  addItem = (text, seconds) => {
+    const newItem = this.createTodoItem(text, seconds);
 
     this.setState(({ todoData }) => {
       const newArr = [...todoData, newItem];
@@ -102,12 +102,28 @@ export default class App extends Component {
     });
   };
 
-  createTodoItem(label) {
+  updateTaskTime = (idTask) => {
+    this.setState(({ todoData }) => {
+      const todoIndex = this.findTodoIndex(idTask, todoData);
+      const newTodoItem = todoData[todoIndex];
+
+      newTodoItem.seconds -= 1;
+
+      const newTodoData = [...todoData.slice(0, todoIndex), newTodoItem, ...todoData.splice(todoIndex + 1)];
+
+      return {
+        todoData: newTodoData,
+      };
+    });
+  };
+
+  createTodoItem(label, seconds) {
     return {
       label,
       done: false,
       createTaskDate: new Date().getTime(),
       id: (this.maxId += 1),
+      seconds,
     };
   }
 
@@ -128,6 +144,8 @@ export default class App extends Component {
         todoActiveData = [...todoData];
     }
 
+    console.log(this.state);
+
     return (
       <div className="todoapp">
         <AppHeader />
@@ -138,6 +156,7 @@ export default class App extends Component {
             onDeleted={this.deleteItem}
             onToggleDone={this.onToggleDone}
             onEditItem={this.onEditItem}
+            updateTaskTime={this.updateTaskTime}
           />
         </section>
         <Footer
