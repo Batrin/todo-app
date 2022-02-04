@@ -1,142 +1,120 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './task.css';
 
 import PropTypes from 'prop-types';
 import { formatDistance } from 'date-fns';
 
-export default class Task extends Component {
-  static defaultProps = {
-    onDeleted: () => {},
-    onToggleDone: () => {},
-    onEditItem: () => {},
-    item: {},
-    createTaskDate: new Date(),
-    updateTaskTime: () => {},
-  };
+function Task( {onDeleted, onToggleDone, onEditItem, item, createTaskDate, updateTaskTime} ) {
+  const { label, done, seconds } = item;
+  const minutesTimer = Math.floor(seconds / 60);
+  const secondsTimer = seconds % 60;
 
-  static propTypes = {
-    onDeleted: PropTypes.func,
-    onToggleDone: PropTypes.func,
-    onEditItem: PropTypes.func,
-    item: PropTypes.instanceOf(Object),
-    createTaskDate: PropTypes.instanceOf(Date),
-    updateTaskTime: PropTypes.func,
-  };
+  const [isNowEditing, setNowEditing] = useState(false);
+  const [inputText, setInputText] = useState(item.label);
+  const [currentDate] = useState(new Date());
+  const [playButtonIsDisabled, setPlayButtonState] = useState(false);
+  const [stopButtonIsDisabled, setStopButtonState] = useState(true);
+  const [interval, setTimerInterval] = useState(null);
 
-  state = {
-    isNowEditing: false,
-    inputText: this.props.item.label,
-    currentDate: new Date(),
-    playButtonDisabled: false,
-    stopButtonDisabled: true,
-  };
+  useEffect(() => {
+    const clearInt = () => {
+      clearInterval(interval);
+    }
+    return clearInt;
+  }, [interval]);
 
-  interval = null;
+  let classNames = 'todo-list-item';
+  let isChecked = false;
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
+  if (done) {
+    classNames += ' completed';
+    isChecked = true;
   }
 
-  showEditForm = () => {
-    this.setState(({ isNowEditing }) => ({
-      isNowEditing: !isNowEditing,
-    }));
-  };
+  if (isNowEditing) {
+    classNames += ' editing';
+  }
 
-  onEditInputChange = (event) => {
-    this.setState({
-      inputText: event.target.value,
-    });
-  };
+  if (seconds === 0) {
+    clearInterval(interval);
+  }
 
-  onSubmitEditForm = (event) => {
+  const formatTimerString = (time) => (String(time).length === 1 ? `0${time}` : `${time}`);
+
+  const onSubmitEditForm = (event) => {
     event.preventDefault();
-    this.props.onEditItem(this.props.item.id, this.state.inputText);
-    this.setState(({ isNowEditing }) => ({
-      isNowEditing: !isNowEditing,
-    }));
-  };
-
-  startTimer = () => {
-    const { updateTaskTime, item } = this.props;
-    const { id } = item;
-    this.interval = setInterval(() => updateTaskTime(id), 1000);
-    this.setState({
-      playButtonDisabled: true,
-      stopButtonDisabled: false,
-    });
-  };
-
-  formatTimerString = (time) => {
-    return String(time).length === 1 ? `0${time}` : `${time}`;
-  };
-
-  stopTimer = () => {
-    clearInterval(this.interval);
-    this.setState({
-      playButtonDisabled: false,
-      stopButtonDisabled: true,
-    });
-  };
-
-  render() {
-    const { onDeleted, onToggleDone, item, createTaskDate } = this.props;
-    const { label, done, seconds } = item;
-    const { isNowEditing, inputText, currentDate, playButtonDisabled, stopButtonDisabled } = this.state;
-    const minutesTimer = Math.floor(seconds / 60);
-    const secondsTimer = seconds % 60;
-
-    let classNames = 'todo-list-item';
-    let isChecked = false;
-
-    if (done) {
-      classNames += ' completed';
-      isChecked = true;
-    }
-
-    if (isNowEditing) {
-      classNames += ' editing';
-    }
-
-    if (seconds === 0) {
-      clearInterval(this.interval);
-    }
-
-    return (
-      <li className={classNames}>
-        <div className="view">
-          <input className="toggle" type="checkbox" onChange={onToggleDone} checked={isChecked} />
-          <label>
-            <span className="description">{label}</span>
-            <div className="timer-control">
-              <button
-                disabled={playButtonDisabled}
-                className="timer-button icon-play"
-                type="button"
-                aria-label="test"
-                onClick={this.startTimer}
-              />
-              <button
-                disabled={stopButtonDisabled}
-                className="timer-button icon-pause"
-                type="button"
-                aria-label="test"
-                onClick={this.stopTimer}
-              />
-              <p className="task-time">
-                {this.formatTimerString(minutesTimer)}:{this.formatTimerString(secondsTimer)}
-              </p>
-            </div>
-            <span className="created">created {formatDistance(createTaskDate, currentDate)} ago</span>
-            <button className="icon icon-edit" onClick={this.showEditForm} type="button" aria-label="edit-element" />
-            <button className="icon icon-destroy" onClick={onDeleted} aria-label="destroy-element" type="button" />
-          </label>
-        </div>
-        <form onSubmit={this.onSubmitEditForm}>
-          <input className="edit" type="text" value={inputText} onChange={this.onEditInputChange} />
-        </form>
-      </li>
-    );
+    onEditItem(item.id, inputText);
+    setNowEditing(false);
   }
+
+  const startTimer = () => {
+    setTimerInterval(setInterval(() => updateTaskTime(item.id), 1000));
+    setPlayButtonState(true);
+    setStopButtonState(false);
+  }
+
+  const stopTimer = () => {
+    clearInterval(interval);
+    setPlayButtonState(false);
+    setStopButtonState(true);
+  }
+
+  return (
+    <li className={classNames}>
+      <div className="view">
+        <input className="toggle" type="checkbox" onChange={onToggleDone} checked={isChecked} />
+        <label>
+          <span className="description">{label}</span>
+          <div className="timer-control">
+            <button
+              disabled={playButtonIsDisabled}
+              className="timer-button icon-play"
+              type="button"
+              aria-label="test"
+              onClick={startTimer}
+            />
+            <button
+              disabled={stopButtonIsDisabled}
+              className="timer-button icon-pause"
+              type="button"
+              aria-label="test"
+              onClick={stopTimer}
+            />
+            <p className="task-time">
+              {formatTimerString(minutesTimer)}:{formatTimerString(secondsTimer)}
+            </p>
+          </div>
+          <span className="created">created {formatDistance(createTaskDate, currentDate)} ago</span>
+          <button className="icon icon-edit" onClick={() => setNowEditing(true)} type="button" aria-label="edit-element" />
+          <button className="icon icon-destroy" onClick={onDeleted} aria-label="destroy-element" type="button" />
+        </label>
+      </div>
+      <form onSubmit={onSubmitEditForm}>
+        <input className="edit" type="text" value={inputText} onChange={(event) => {setInputText(event.target.value)}} />
+      </form>
+    </li>
+  );
 }
+
+Task.defaultProps = {
+  onDeleted: () => {},
+  onToggleDone: () => {},
+  onEditItem: () => {},
+  item: {},
+  createTaskDate: new Date(),
+  updateTaskTime: () => {},
+};
+
+Task.propTypes = {
+  onDeleted: PropTypes.func,
+  onToggleDone: PropTypes.func,
+  onEditItem: PropTypes.func,
+  item: PropTypes.instanceOf(Object),
+  createTaskDate: PropTypes.instanceOf(Date),
+  updateTaskTime: PropTypes.func,
+};
+
+export default Task;
+
+

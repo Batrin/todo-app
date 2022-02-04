@@ -2,10 +2,9 @@
   "extends": [
     "airbnb",
     "airbnb/hooks",
-    "eslint-config-prettier",
-    "plugin:prettier/recommended"
+    "eslint-config-prettier"
   ],
-  "plugins": ["react"],
+  "plugins": ["react", "eslint-plugin-prettier"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "requireConfigFile": false,
@@ -20,9 +19,14 @@
   "rules": {
     "curly": ["error"],
     "max-depth": ["warn", 4],
-    "id-length": ["warn", { "exceptions": ["i", "j"], "min": 2 }],
+    "id-length": ["warn", {
+      "exceptions": ["i", "j"],
+      "min": 2
+    }],
     "no-lonely-if": ["error"],
-    "no-plusplus": ["error", {"allowForLoopAfterthoughts": true}],
+    "no-plusplus": ["error", {
+      "allowForLoopAfterthoughts": true
+    }],
     "no-restricted-syntax": "off",
     "prefer-destructuring": "off",
     "react/destructuring-assignment": "off",
@@ -31,13 +35,15 @@
     "class-methods-use-this": "off",
     "jsx-a11y/href-no-hash": ["off"],
     "jsx-a11y/anchor-is-valid": ["off"],
-    "jsx-a11y/label-has-associated-control": [ "error", {
+    "jsx-a11y/label-has-associated-control": ["error", {
       "assert": "either"
     }],
     "react/state-in-constructor": ["off"],
     "react/jsx-props-no-spreading": ["off"],
     "react/static-property-placement": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": [1, {
+      "extensions": [".js", ".jsx"]
+    }],
     "jsx-a11y/no-autofocus": "off",
     "react/default-props-match-prop-types": "off"
   },

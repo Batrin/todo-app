@@ -1,64 +1,56 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './new-task-form.css';
 
-export default class NewTaskForm extends Component {
-  state = {
-    label: 'Пусто',
-    minutes: 0,
-    seconds: 0,
-  };
+function NewTaskForm( {onAddedItem} ){
+  const [label, setLabelText] = useState('Пусто');
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
 
-  static propTypes = {
-    onAddedItem: PropTypes.func,
-  };
 
-  static defaultProps = {
-    onAddedItem: () => {},
-  };
-
-  onLabelChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  onSubmit = (event) => {
+  function onSubmit(event){
     event.preventDefault();
-    const { label, minutes, seconds } = this.state;
     const secondsForTask = minutes * 60 + Number(seconds);
-    this.props.onAddedItem(label, secondsForTask);
+    onAddedItem(label, secondsForTask);
     event.target.reset();
   };
 
-  render() {
-    return (
-      <form onSubmit={this.onSubmit} className="new-todo-form">
-        <input
-          name="label"
-          className="new-todo"
-          type="text"
-          placeholder="Task"
-          autoFocus
-          onChange={this.onLabelChange}
-        />
-        <input
-          name="minutes"
-          type="text"
-          className="new-todo-form__timer"
-          placeholder="Min"
-          onChange={this.onLabelChange}
-        />
-        <input
-          name="seconds"
-          type="text"
-          className="new-todo-form__timer"
-          placeholder="Sec"
-          onChange={this.onLabelChange}
-        />
-        <input type="submit" className="submit-button" />
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={onSubmit} className="new-todo-form">
+      <input
+        name="label"
+        className="new-todo"
+        type="text"
+        placeholder="Task"
+        autoFocus
+        onChange={(event) => { setLabelText(event.target.value) }}
+      />
+      <input
+        name="minutes"
+        type="text"
+        className="new-todo-form__timer"
+        placeholder="Min"
+        onChange={(event) => { setMinutes(event.target.value) }}
+      />
+      <input
+        name="seconds"
+        type="text"
+        className="new-todo-form__timer"
+        placeholder="Sec"
+        onChange={(event) => {setSeconds(event.target.value)}}
+      />
+      <input type="submit" className="submit-button" />
+    </form>
+  );
 }
+
+NewTaskForm.propTypes = {
+  onAddedItem: PropTypes.func,
+};
+
+NewTaskForm.defaultProps = {
+  onAddedItem: () => {},
+};
+
+export default NewTaskForm;
