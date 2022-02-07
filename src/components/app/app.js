@@ -20,7 +20,8 @@ export default function App() {
   const findTodoIndex = (id, array) => array.findIndex((el) => el.id === id);
 
   const toggleItemProp = (sourceArray, itemId, prop) => {
-    const oldItem = sourceArray[itemId];
+    const sourceArrCopy = [...sourceArray];
+    const oldItem = sourceArrCopy[itemId];
 
     oldItem[prop] = !oldItem[prop];
 
@@ -28,7 +29,7 @@ export default function App() {
       ...oldItem,
     };
 
-    return [...sourceArray.slice(0, itemId), newItem, ...sourceArray.slice(itemId + 1)];
+    return [...sourceArrCopy.slice(0, itemId), newItem, ...sourceArrCopy.slice(itemId + 1)];
   }
 
   const onToggleDone = (id) => {

@@ -45,7 +45,8 @@
       "extensions": [".js", ".jsx"]
     }],
     "jsx-a11y/no-autofocus": "off",
-    "react/default-props-match-prop-types": "off"
+    "react/default-props-match-prop-types": "off",
+    "no-unneeded-ternary": "off"
   },
   "settings": {
     "react": {

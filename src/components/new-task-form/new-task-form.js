@@ -4,16 +4,21 @@ import PropTypes from 'prop-types';
 import './new-task-form.css';
 
 function NewTaskForm( {onAddedItem} ){
-  const [label, setLabelText] = useState('Пусто');
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+  const [label, setLabelText] = useState('');
+  const [minutes, setMinutes] = useState('');
+  const [seconds, setSeconds] = useState('');
 
+  function resetAllInputs() {
+    setLabelText('');
+    setMinutes('');
+    setSeconds('');
+  }
 
   function onSubmit(event){
     event.preventDefault();
     const secondsForTask = minutes * 60 + Number(seconds);
     onAddedItem(label, secondsForTask);
-    event.target.reset();
+    resetAllInputs();
   };
 
   return (
@@ -25,6 +30,7 @@ function NewTaskForm( {onAddedItem} ){
         placeholder="Task"
         autoFocus
         onChange={(event) => { setLabelText(event.target.value) }}
+        value={label}
       />
       <input
         name="minutes"
@@ -32,6 +38,7 @@ function NewTaskForm( {onAddedItem} ){
         className="new-todo-form__timer"
         placeholder="Min"
         onChange={(event) => { setMinutes(event.target.value) }}
+        value={minutes}
       />
       <input
         name="seconds"
@@ -39,6 +46,7 @@ function NewTaskForm( {onAddedItem} ){
         className="new-todo-form__timer"
         placeholder="Sec"
         onChange={(event) => {setSeconds(event.target.value)}}
+        value={seconds}
       />
       <input type="submit" className="submit-button" />
     </form>

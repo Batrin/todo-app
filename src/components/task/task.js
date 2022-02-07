@@ -13,16 +13,10 @@ function Task( {onDeleted, onToggleDone, onEditItem, item, createTaskDate, updat
   const [isNowEditing, setNowEditing] = useState(false);
   const [inputText, setInputText] = useState(item.label);
   const [currentDate] = useState(new Date());
-  const [playButtonIsDisabled, setPlayButtonState] = useState(false);
-  const [stopButtonIsDisabled, setStopButtonState] = useState(true);
+  const [isTimerActive, setTimerActive] = useState(false);
   const [interval, setTimerInterval] = useState(null);
 
-  useEffect(() => {
-    const clearInt = () => {
-      clearInterval(interval);
-    }
-    return clearInt;
-  }, [interval]);
+  useEffect(() => () => clearInterval(interval), [interval])
 
   let classNames = 'todo-list-item';
   let isChecked = false;
@@ -50,14 +44,12 @@ function Task( {onDeleted, onToggleDone, onEditItem, item, createTaskDate, updat
 
   const startTimer = () => {
     setTimerInterval(setInterval(() => updateTaskTime(item.id), 1000));
-    setPlayButtonState(true);
-    setStopButtonState(false);
+    setTimerActive(true);
   }
 
   const stopTimer = () => {
     clearInterval(interval);
-    setPlayButtonState(false);
-    setStopButtonState(true);
+    setTimerActive(false);
   }
 
   return (
@@ -68,14 +60,14 @@ function Task( {onDeleted, onToggleDone, onEditItem, item, createTaskDate, updat
           <span className="description">{label}</span>
           <div className="timer-control">
             <button
-              disabled={playButtonIsDisabled}
+              disabled={isTimerActive? true: false}
               className="timer-button icon-play"
               type="button"
               aria-label="test"
               onClick={startTimer}
             />
             <button
-              disabled={stopButtonIsDisabled}
+              disabled={isTimerActive? false: true}
               className="timer-button icon-pause"
               type="button"
               aria-label="test"
